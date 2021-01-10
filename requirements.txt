@@ -1,0 +1,34 @@
+# LINUX PYTHON 3.X
+sudo apt install virtualenv (Opcional)
+sudo apt install python3-pip
+sudo python3 -m pip install Flask
+sudo python3 -m pip install flask-cors
+sudo python3 -m pip install flask-Injector
+sudo python3 -m pip install flask-sqlalchemy
+sudo python3 -m pip install pandas
+sudo python3 -m pip install Flask-Script
+sudo python3 -m pip install psycopg2 ó sudo python3 -m pip install psycopg2-binary
+sudo apt-get install libmysqlclient-dev
+sudo -H pip3 install mysqlclient
+# sudo python3 -m pip install flask-restful
+
+python3 manage.py runserver -h 0.0.0.0 -p 5000 # Levantar servidor
+
+pip install Flask-Injector
+pip install -U flask-cors
+pip install flask-sqlalchemy
+pip install pandas
+pip install Flask-Script
+pip install psycopg2
+pip install mysqlclient
+
+flask==1.0.2
+pyPika==0.34.0
+flask-Cors==3.0.7
+flask-Script==2.0.6
+flask-Injector==0.12.0
+flask-SQLAlchemy==2.3.2
+pandas==0.24.1
+psycopg2==2.7.7
+
+http://localhost:5000/UNIGRASAS/api/pruebas_insert?estado=Estadodeprueba
