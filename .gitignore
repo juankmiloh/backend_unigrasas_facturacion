@@ -11,3 +11,4 @@
 *.njsproj
 *.sln
 *.local
+.venv

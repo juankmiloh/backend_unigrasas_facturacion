@@ -2,9 +2,9 @@
 import os
 import logging
 from flask import Flask
-from flask_cors import CORS
-from flask_injector import FlaskInjector
 from flask_sqlalchemy import SQLAlchemy
+from flask_injector import FlaskInjector
+from flask_cors import CORS
 from injector import Module, Injector, singleton
 from sqlalchemy.ext.declarative import declarative_base
 
