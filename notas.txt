@@ -22,23 +22,15 @@ pip install Flask-Script
 pip install psycopg2
 pip install mysqlclient
 
-flask==1.0.2
-pyPika==0.34.0
-flask-Cors==3.0.7
-flask-Script==2.0.6
-flask-Injector==0.12.0
-flask-SQLAlchemy==2.3.2
-pandas==0.24.1
-psycopg2==2.7.7
-
-http://localhost:5000/UNIGRASAS/api/pruebas_insert?estado=Estadodeprueba
-
-
-flask
-flask-cors
-flask-Injector
-flask-SQLAlchemy
-pandas
-flask-Script
-psycopg2-binary
-mysqlclient
+---------------------------------------
+# PARA CONFIGURAR EN AZURE APP SERVICE
+---------------------------------------
+1. Luego de instalar AZURE_CLI - correr el siguiente comando "pip install azure-cli==2.0.75" https://pypi.org/project/azure-cli/
+2. Configurar la variable de entorno que permite instalar librerias de python asi:
+    -> az webapp config appsettings set --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+3. Comando Asociar el App Services al proyecto:
+    -> az webapp up --sku F1 --name unigrasaswebservices
+4. Comando Para actualizar el proyecto en AZURE:
+    -> az webapp up
+5. Comando para ver en tiempo real la consola del proyecto:
+    -> az webapp log tail
