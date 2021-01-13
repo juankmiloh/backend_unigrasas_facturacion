@@ -7,26 +7,17 @@ def peticionhttp():
     # return response.json()
     return response.status_code
 
-def executeTimer1(peticiones):
-    # print(f"-> executeTimer1 started at {time.strftime('%b %d %Y %H:%M:%S')}")
-    print('--------')
-    print('-> Peticiones hechas al servidor AZURE: ', peticiones)
-    print('--------')
-    response = peticionhttp()
+def executeTimer(peticiones):
+    response = peticionhttp()    
     if response:
-        print('Response: ', response)
-        print('--------')
-        executeTimer2(peticiones)
-
-def executeTimer2(peticiones):
-    print(f"-> executeTimer started at {time.strftime('%b %d %Y %H:%M:%S')}")
-    timer1 = Timer(239, executeTimer1, [peticiones + 1])
-    timer1.start()
-    for segundo in reversed(range(0, 240)):
-        print('La petición http se hara en: ', segundo, ' segundos')
+        print('--------\n', 'Response: ', response)
+        print('--------\n', '-> Peticiones hechas al servidor AZURE: ', peticiones, '\n--------')
         time.sleep(1)
+        print(f"-> executeTimer started at {time.strftime('%b %d %Y %H:%M:%S')}")
+        timer1 = Timer(240, executeTimer, [peticiones + 1])
+        timer1.start()
+        for segundo in reversed(range(0, 239)):
+            time.sleep(1)
+            print('La petición http se hara en: ', segundo, ' segundos')
 
-def timer():
-    executeTimer1(1)
-
-timer()
+executeTimer(1)

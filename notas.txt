@@ -1,6 +1,27 @@
+---------------------------------------
 # LINUX PYTHON 3.X
-sudo apt install virtualenv (Opcional)
+---------------------------------------
 sudo apt install python3-pip
+
+---------------------------------------
+# COMANDOS LINUX PARA INICIAR EL PROYECTO EN UN ENTORNO VIRTUAL
+---------------------------------------
+sudo apt install virtualenv
+source .venv/bin/activate
+pip install -r requirements.txt
+-> Ejecutar el servidor: flask run
+
+---------------------------------------
+# COMANDOS WINDOWS PARA INICIAR EL PROYECTO EN UN ENTORNO VIRTUAL
+---------------------------------------
+py -3 -m venv .venv
+.venv\scripts\activate
+pip install -r requirements.txt
+-> Ejecutar el servidor: flask run
+
+---------------------------------------
+# COMANDOS PARA INICIAR EL PROYECTO EN EL EQUIPO LOCAL
+---------------------------------------
 sudo python3 -m pip install Flask
 sudo python3 -m pip install flask-cors
 sudo python3 -m pip install flask-Injector
@@ -12,18 +33,8 @@ sudo apt-get install libmysqlclient-dev
 sudo -H pip3 install mysqlclient
 # sudo python3 -m pip install flask-restful
 
-python3 manage.py runserver -h 0.0.0.0 -p 5000 # Levantar servidor
-
-pip install Flask-Injector
-pip install -U flask-cors
-pip install flask-sqlalchemy
-pip install pandas
-pip install Flask-Script
-pip install psycopg2
-pip install mysqlclient
-
 ---------------------------------------
-# PARA CONFIGURAR EN AZURE APP SERVICE
+# COMANDOS PARA CONFIGURAR SERVIDOR EN AZURE APP SERVICES
 ---------------------------------------
 1. Luego de instalar AZURE_CLI - correr el siguiente comando "pip install azure-cli==2.0.75" https://pypi.org/project/azure-cli/
 2. Configurar la variable de entorno que permite instalar librerias de python asi:

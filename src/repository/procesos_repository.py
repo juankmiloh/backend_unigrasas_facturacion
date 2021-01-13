@@ -7,7 +7,7 @@ class ProcesosRepository:
 
     def get_procesos_bd(self):
         sql = '''
-            SELECT F.IDFACTURA, C.NOMBRE, F.F_EMISION, F.TOTAL, U.IDUSUARIO, CONCAT_WS(' ', U.NOMBRE, U.APELLIDO) AS USUARIO, F.F_VENCIMIENTO FROM FACTURA F, CLIENTE C, USUARIO U
+            SELECT F.IDFACTURA, C.NOMBRE, F.F_EMISION, F.TOTAL, U.IDUSUARIO, CONCAT_WS(' ', U.NOMBRE, U.APELLIDO) AS USUARIO, F.F_VENCIMIENTO, F.IDESTADO FROM FACTURA F, CLIENTE C, USUARIO U
             WHERE F.IDCLIENTE = C.IDCLIENTE
             AND F.IDUSUARIO = U.IDUSUARIO
             ORDER BY F.IDFACTURA DESC;
@@ -120,7 +120,8 @@ class ProcesosRepository:
                 F_VENCIMIENTO = STR_TO_DATE(:FVENCIMIENTO_ARG,'%Y/%m/%d %H:%i:%s'),
                 F_PAGO = STR_TO_DATE(:FPAGO_ARG,'%Y/%m/%d %H:%i:%s'),
                 TOTAL = :TOTAL_ARG,
-                DESCRIPCION = :DESCRIPCION_ARG
+                DESCRIPCION = :DESCRIPCION_ARG,
+                IDESTADO = 2
 	        WHERE
                 IDFACTURA = :IDFACTURA_ARG;
         '''
@@ -128,6 +129,17 @@ class ProcesosRepository:
          IDMETODO_PAGO_ARG=dataProceso["metodopago"], IDMEDIO_PAGO_ARG=dataProceso["mediopago"], IDUSUARIO_ARG=dataProceso["idusuario"],
          DIVISA_ARG=dataProceso["divisa"], FEMISION_ARG=dataProceso["f_emision"], FVENCIMIENTO_ARG=dataProceso["f_vencimiento"], 
          FPAGO_ARG=dataProceso["f_pago"], TOTAL_ARG=dataProceso["total"], DESCRIPCION_ARG=dataProceso["descripcion"])
+    
+    def proceso_anular_bd(self, idProceso):
+        print('-------------------------------------')
+        print('* FACTURA A ANULAR -> ', idProceso)
+        print('-------------------------------------')
+        sql = '''
+            UPDATE FACTURA
+            SET IDESTADO = 4
+            WHERE IDFACTURA = :IDPROCESO_ARG;
+        '''
+        self.db.engine.execute(text(sql), IDPROCESO_ARG=idProceso)
     
     def proceso_delete_bd(self, idProceso):
         print('-------------------------------------')

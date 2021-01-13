@@ -7,11 +7,13 @@ class InformeRepository:
 
     def get_cantidad_procesos_bd(self, idservicio):
         sql = '''
-            SELECT (CASE WHEN PROCESO_FASE.CANTIDAD IS NOT NULL THEN PROCESO_FASE.CANTIDAD ELSE 0 END) AS CANTIDAD, FASE.NOMBRE FROM
-            (SELECT * FROM FASE) FASE
+            SELECT (CASE WHEN FACTURA_ESTADO.CANTIDAD IS NOT NULL THEN FACTURA_ESTADO.CANTIDAD ELSE 0 END) AS CANTIDAD, ESTADO.NOMBRE FROM
+            (SELECT * FROM ESTADO) ESTADO
             LEFT JOIN
-            (SELECT F.IDFASE, COUNT(*) AS CANTIDAD, F.NOMBRE FROM PROCESO P, FASE F WHERE P.FASE = F.IDFASE AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG) GROUP BY F.IDFASE, F.NOMBRE ORDER BY F.NOMBRE ASC) PROCESO_FASE
-            ON FASE.IDFASE = PROCESO_FASE.IDFASE;
+            (SELECT F.IDESTADO, COUNT(*) AS CANTIDAD, E.NOMBRE FROM FACTURA F, ESTADO E
+            WHERE F.IDESTADO = E.IDESTADO AND (F.IDCLIENTE = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG) 
+            GROUP BY F.IDESTADO, E.NOMBRE ORDER BY E.NOMBRE ASC) FACTURA_ESTADO
+            ON ESTADO.IDESTADO = FACTURA_ESTADO.IDESTADO;
         '''
         return self.db.engine.execute(text(sql), IDSERVICIO_ARG=idservicio).fetchall()
 
@@ -19,24 +21,25 @@ class InformeRepository:
     
     def get_cantidad_procesos_empresa_bd(self, fase, idservicio):
         sql = '''
-            SELECT COUNT(*), EMP.NOMBRE FROM PROCESO P, EMPRESA EMP
-            WHERE 
-                P.FASE = :FASE_ARG
-                AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                AND P.EMPRESA = EMP.IDEMPRESA
-                AND P.IDSERVICIO = EMP.SERVICIO
-            GROUP BY EMP.NOMBRE;
+            SELECT SUM(FI.CANTIDAD) AS CANTIDAD, I.NOMBRE FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
+            WHERE F.IDFACTURA = FI.IDFACTURA
+            AND FI.IDITEM = I.IDITEM
+            AND F.IDESTADO = :FASE_ARG
+            AND (F.IDCLIENTE = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
+            GROUP BY F.IDESTADO, I.NOMBRE
+            ORDER BY F.IDFACTURA DESC;
         '''
         return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
 
     def get_procesos_empresa_bd(self, fase, idservicio):
         sql = '''
-            SELECT P.IDPROCESO, P.RADICADOPROCESO, EMP.NOMBRE FROM PROCESO P, EMPRESA EMP
-            WHERE 
-                P.FASE = :FASE_ARG
-                AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                AND P.EMPRESA = EMP.IDEMPRESA
-                AND P.IDSERVICIO = EMP.SERVICIO;
+            SELECT F.IDFACTURA, I.NOMBRE, SUM(FI.CANTIDAD) AS CANTIDAD FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
+            WHERE F.IDFACTURA = FI.IDFACTURA
+            AND FI.IDITEM = I.IDITEM
+            AND F.IDESTADO = :FASE_ARG
+            AND (F.IDCLIENTE = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
+            GROUP BY F.IDFACTURA, F.IDESTADO, I.NOMBRE
+            ORDER BY F.IDFACTURA DESC;
         '''
         return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
 

@@ -53,6 +53,13 @@ def updateProceso(procesos_service: ProcesosService, procesos_repository: Proces
     dataProceso = request.json
     return json.dumps(procesos_service.proceso_update(procesos_repository, dataProceso))
 
+# Anular un proceso
+@controller.route(API_ROOT_PATH + 'procesos', methods=['PUT'])
+def anularProceso(procesos_service: ProcesosService, procesos_repository: ProcesosRepository):
+    # Id proceso
+    idProceso = request.args.get('idProceso', default='', type=str)
+    return json.dumps(procesos_service.proceso_anular(procesos_repository, idProceso))
+
 # Eliminar un proceso
 @controller.route(API_ROOT_PATH + 'procesos', methods=['DELETE'])
 def deleteProceso(procesos_service: ProcesosService, procesos_repository: ProcesosRepository):

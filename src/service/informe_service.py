@@ -33,20 +33,16 @@ class InformeService:
 
         columnsTable = [
             {
-                'label': '#',
-                'prop': 'idproceso'
+                'label': 'Factura',
+                'prop': 'idfactura'
             },
             {
-                'label': 'Expediente',
-                'prop': 'expediente'
+                'label': 'Producto',
+                'prop': 'item'
             },
             {
-                'label': 'Empresa',
-                'prop': 'empresa'
-            },
-            {
-                'label': 'Fase',
-                'prop': 'fase'
+                'label': 'Cantidad',
+                'prop': 'cantidad'
             }
         ]
 
@@ -61,7 +57,7 @@ class InformeService:
             empPactivos.append(result[1].capitalize())
             pactivos.append(
                 {
-                    'value': result[0],
+                    'value': int(result[0]),
                     'name': result[1].capitalize()
                 }
             )
@@ -70,9 +66,9 @@ class InformeService:
         for result in data:
             dataActivos.append(
                 {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'empresa': result[2].capitalize(),
+                    'idfactura': result[0],
+                    'item': result[1],
+                    'cantidad': int(result[2]),
                     'fase': 'Activo'
                 }
             )
@@ -84,7 +80,7 @@ class InformeService:
             empPterminados.append(result[1].capitalize())
             pterminados.append(
                 {
-                    'value': result[0],
+                    'value': int(result[0]),
                     'name': result[1].capitalize()
                 }
             )
@@ -93,32 +89,32 @@ class InformeService:
         for result in data:
             dataTerminados.append(
                 {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'empresa': result[2].capitalize(),
+                    'idfactura': result[0],
+                    'item': result[1],
+                    'cantidad': int(result[2]),
                     'fase': 'Terminado'
                 }
             )
         
         # PROCESOS Eliminados
 
-        data = informe_repository.get_cantidad_procesos_empresa_bd(3, idservicio)
+        data = informe_repository.get_cantidad_procesos_empresa_bd(4, idservicio)
         for result in data:
             empPeliminados.append(result[1].capitalize())
             peliminados.append(
                 {
-                    'value': result[0],
+                    'value': int(result[0]),
                     'name': result[1].capitalize()
                 }
             )
 
-        data = informe_repository.get_procesos_empresa_bd(3, idservicio)
+        data = informe_repository.get_procesos_empresa_bd(4, idservicio)
         for result in data:
             dataEliminados.append(
                 {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'empresa': result[2].capitalize(),
+                    'idfactura': result[0],
+                    'item': result[1],
+                    'cantidad': int(result[2]),
                     'fase': 'Eliminado'
                 }
             )
@@ -126,21 +122,21 @@ class InformeService:
         # SE ESTRUCTURA EL OBJETO JSON DE RESPUESTA
 
         pieChartData = {
-            'activos': {
+            'en curso': {
                 'title': 'Procesos activos',
                 'leyenda': empPactivos,
                 'datos': pactivos,
                 'columns': columnsTable,
                 'data': dataActivos
             },
-            'terminados': {
+            'completadas': {
                 'title': 'Procesos terminados',
                 'leyenda': empPterminados,
                 'datos': pterminados,
                 'columns': columnsTable,
                 'data': dataTerminados
             },
-            'eliminados': {
+            'anuladas': {
                 'title': 'Procesos eliminados',
                 'leyenda': empPeliminados,
                 'datos': peliminados,
