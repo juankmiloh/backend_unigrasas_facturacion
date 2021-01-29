@@ -39,6 +39,8 @@ sudo -H pip3 install mysqlclient
 1. Luego de instalar AZURE_CLI - correr el siguiente comando "pip install azure-cli==2.0.75" https://pypi.org/project/azure-cli/
 2. Configurar la variable de entorno que permite instalar librerias de python asi:
     -> az webapp config appsettings set --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+    -> az webapp config appsettings set --settings WEBSITES_PORT=80 (Para nodejs)
+    -> az webapp config appsettings set --settings PORT=8000 (Para nodejs)
 3. Comando Asociar el App Services al proyecto:
     -> az webapp up --sku F1 --name unigrasaswebservices
 4. Comando Para actualizar el proyecto en AZURE:

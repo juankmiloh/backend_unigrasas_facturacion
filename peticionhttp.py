@@ -8,7 +8,7 @@ def peticionhttp():
     return response.status_code
 
 def executeTimer(peticiones):
-    response = peticionhttp()    
+    response = peticionhttp()
     if response:
         print('--------\n', 'Response: ', response)
         print('--------\n', '-> Peticiones hechas al servidor AZURE: ', peticiones, '\n--------')

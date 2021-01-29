@@ -29,7 +29,8 @@ class ProcesosService:
                     'idusuario': result[4],
                     'usuario': result[5],
                     'f_vencimiento': f_vencimiento,
-                    'estado': result[7]
+                    'estado': result[7],
+                    'nom_estado': result[8]
                 }
             )
         return procesos

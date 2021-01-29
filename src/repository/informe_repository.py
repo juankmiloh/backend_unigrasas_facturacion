@@ -26,8 +26,7 @@ class InformeRepository:
             AND FI.IDITEM = I.IDITEM
             AND F.IDESTADO = :FASE_ARG
             AND (F.IDCLIENTE = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-            GROUP BY F.IDESTADO, I.NOMBRE
-            ORDER BY F.IDFACTURA DESC;
+            GROUP BY F.IDESTADO, I.NOMBRE;
         '''
         return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
 
