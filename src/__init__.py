@@ -49,8 +49,4 @@ def create_app():
 
     FlaskInjector(app=app, injector=injector)
 
-    # print("____________________")
-    # print(app.config.get("ENV"))
-    # print("____________________")
-
     return app

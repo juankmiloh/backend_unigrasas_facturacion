@@ -1,12 +1,11 @@
 import json
-
 from flask import request
-
 from ..controller import controller
 from ..service import ItemsService
 from ..repository import ItemsRepository
 from ..util.constants import API_ROOT_PATH
 
+# Obterner lista de items
 @controller.route(API_ROOT_PATH + 'items', methods=['GET'])
 def items(items_service: ItemsService, items_repository: ItemsRepository):
     return json.dumps(items_service.get_items(items_repository))

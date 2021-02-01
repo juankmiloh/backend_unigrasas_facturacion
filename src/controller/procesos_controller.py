@@ -1,7 +1,5 @@
 import json
-
 from flask import request
-
 from ..controller import controller
 from ..service import ProcesosService
 from ..repository import ProcesosRepository

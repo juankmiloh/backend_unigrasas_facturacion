@@ -104,10 +104,6 @@ class ProcesosRepository:
         print('-------------------------------------')
         print('* PROCESO A ACTUALIZAR -> ', dataProceso)
         print('-------------------------------------')
-
-        # if dataProceso["caducidad"] == 'None':
-        #     dataProceso["caducidad"] = None
-
         sql = '''
             UPDATE 
                 FACTURA

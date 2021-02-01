@@ -7,6 +7,6 @@ class EstadosRepository:
 
     def get_estados_bd(self):
         sql = '''
-            SELECT * FROM ESTADO WHERE NOMBREESTADO NOT IN ('Eliminado') ORDER BY IDESTADO ASC;
+            SELECT * FROM ESTADO;
         '''
         return self.db.engine.execute(text(sql)).fetchall()

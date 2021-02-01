@@ -90,7 +90,7 @@ class ProcesosService:
 
     def proceso_insert(self, procesos_repository: ProcesosRepository, proceso):
         procesos_repository.proceso_insert_bd(proceso)
-        return add_wrapper(['Factura registrado con éxito!'])
+        return add_wrapper(['Factura registrada con éxito!'])
     
     def proceso_usuario_update(self, procesos_repository: ProcesosRepository, dataProceso):
         procesos_repository.proceso_usuario_update_bd(dataProceso)
@@ -98,7 +98,7 @@ class ProcesosService:
 
     def proceso_total_update(self, procesos_repository: ProcesosRepository, dataProceso):
         procesos_repository.proceso_total_update_bd(dataProceso)
-        return add_wrapper(['Total actualizada con éxito!'])
+        return add_wrapper(['Total actualizado con éxito!'])
     
     def proceso_update(self, procesos_repository: ProcesosRepository, dataProceso):
         procesos_repository.proceso_update_bd(dataProceso)

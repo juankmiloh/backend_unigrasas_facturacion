@@ -1,6 +1,4 @@
-from itertools import count
 from sqlalchemy.sql import text
-from sqlalchemy.sql.elements import Null
 
 
 class FacturaHasItemRepository:

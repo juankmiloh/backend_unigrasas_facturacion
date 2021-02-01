@@ -1,6 +1,4 @@
-from itertools import count
 from sqlalchemy.sql import text
-from sqlalchemy.sql.elements import Null
 
 
 class ItemsRepository:
@@ -39,8 +37,7 @@ class ItemsRepository:
 	        WHERE IDITEM = :IDITEM_ARG;
         '''
         self.db.engine.execute(text(sql), IDITEM_ARG=item["value"], CODITEM_ARG=item["id"], NOMBRE_ARG=item["label"], PRECIO_ARG=item["precio"], DESCRIPCION_ARG=item["descripcion"])
-            
-                        
+
     def items_delete_bd(self, item):
         print('-------------------------------------')
         print('* ITEM A ELIMINAR -> ', item)

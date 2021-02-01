@@ -1,10 +1,4 @@
-import pandas as pd
-import numpy as np
-import datetime
-from flask import abort
 from ..repository import EstadosRepository
-from ..util.web_util import to_date
-from ..util.web_util import add_wrapper
 
 class EstadosService:
 

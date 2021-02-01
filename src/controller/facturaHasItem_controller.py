@@ -1,12 +1,11 @@
 import json
-
 from flask import request
-
 from ..controller import controller
 from ..service import FacturaHasItemService
 from ..repository import FacturaHasItemRepository
 from ..util.constants import API_ROOT_PATH
 
+# Obtener lista de todas las facturas
 @controller.route(API_ROOT_PATH + 'facturaHasItems', methods=['GET'])
 def facturaHasItem(facturaHasItem_service: FacturaHasItemService, facturaHasItem_repository: FacturaHasItemRepository):
     return json.dumps(facturaHasItem_service.get_facturaHasItem(facturaHasItem_repository))
