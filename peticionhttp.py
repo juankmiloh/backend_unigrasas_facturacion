@@ -11,7 +11,7 @@ def executeTimer(peticiones):
     response = peticionhttp()
     if response:
         print('--------\n', 'Response: ', response)
-        print('--------\n', '-> Peticiones hechas al servidor AZURE: ', peticiones, '\n--------')
+        print('--------\n', '-> Peticiones realizadas al servidor AZURE: ', peticiones, '\n--------')
         time.sleep(1)
         print(f"-> executeTimer started at {time.strftime('%b %d %Y %H:%M:%S')}")
         timer1 = Timer(240, executeTimer, [peticiones + 1])

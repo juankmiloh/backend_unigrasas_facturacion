@@ -28,7 +28,7 @@
 -- COMANDOS PARA CREAR UN SERVICIO EN LINUX - Levantar servidor de nodejs (VUEJS)
 ---------------------------------------------------------------------------
 1. Entrar al directorio:
-	/lib/systemd/system/
+	cd /lib/systemd/system/
 
 2. Crear el script del servicio
 	sudo nano sample.service
@@ -101,7 +101,7 @@ https://ubunlog.com/iniciar-scripts-al-inicio-ubuntu/
 	sudo chmod +x peticionhttp.py
 
 1. Entrar al directorio:
-	/lib/systemd/system/
+	cd /lib/systemd/system/
 
 2. Crear el script del servicio
 	sudo nano pythonhttp.service
