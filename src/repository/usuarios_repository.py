@@ -86,7 +86,7 @@ class UsuariosRepository:
         print('-------------------------------------')
         print('* USUARIO A ACTUALIZAR -> ', usuario['contrasena'])
         print('-------------------------------------')
-        if usuario['contrasena'] != '':    
+        if usuario['contrasena'] != '':
             sql = '''
                 UPDATE USUARIO SET
                     NOMBRE = :NOMBRE_ARG,
