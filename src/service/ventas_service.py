@@ -4,63 +4,71 @@ class VentasService:
 
     def get_ventas_lista_anos(self, ventas_repository: VentasRepository):
         anos = []
-        anos.append({'value': 0, 'label': 'TODOS'})
+        children = []
         data = ventas_repository.get_ventas_lista_anos_bd()
         for result in data:
-            anos.append(
+            children.append(
                 {
-                    'value': result[0],
+                    'id': result[0],
                     'label': result[0],
                 }
             )
+        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        anos.append(tree)
         return anos
     
-    def get_ventas_lista_meses(self, ventas_repository: VentasRepository, ano):
+    def get_ventas_lista_meses(self, ventas_repository: VentasRepository, datos):
         nombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
         meses = []
-        meses.append({'value': 0, 'label': 'TODOS'})
-        data = ventas_repository.get_ventas_lista_meses_bd(ano)
+        children = []
+        data = ventas_repository.get_ventas_lista_meses_bd(datos)
         for result in data:
-            meses.append(
+            children.append(
                 {
-                    'value': result[0],
+                    'id': result[0],
                     'label': nombres[result[0] - 1],
                 }
             )
+        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        meses.append(tree)
         return meses
     
-    def get_ventas_clientes(self, ventas_repository: VentasRepository, ano, mes):
+    def get_ventas_clientes(self, ventas_repository: VentasRepository, datos):
         clientes = []
-        clientes.append({'value': 0, 'label': 'TODOS'})
-        data = ventas_repository.get_ventas_clientes_bd(ano, mes)
+        children = []
+        data = ventas_repository.get_ventas_clientes_bd(datos)
         for result in data:
-            clientes.append(
+            children.append(
                 {
-                    'value': result[0],
+                    'id': result[0],
                     'label': result[1],
                 }
             )
+        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        clientes.append(tree)
         return clientes
     
-    def get_ventas_usuarios(self, ventas_repository: VentasRepository, cliente, ano, mes):
+    def get_ventas_usuarios(self, ventas_repository: VentasRepository, datos):
         usuarios = []
-        usuarios.append({'value': 0, 'label': 'TODOS'})
-        data = ventas_repository.get_ventas_usuarios_bd(cliente, ano, mes)
+        children = []
+        data = ventas_repository.get_ventas_usuarios_bd(datos)
         for result in data:
-            usuarios.append(
+            children.append(
                 {
-                    'value': result[0],
+                    'id': result[0],
                     'label': result[1],
                 }
             )
+        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        usuarios.append(tree)
         return usuarios
     
-    def get_ventas_productos(self, ventas_repository: VentasRepository, cliente, usuario, ano, mes, producto):
+    def get_ventas_productos(self, ventas_repository: VentasRepository, datos):
         productos = []
-        productos.append({'value': 0, 'label': 'TODOS'})
-        data = ventas_repository.get_ventas_productos_bd(cliente, usuario, ano, mes, producto)
+        children = []
+        data = ventas_repository.get_ventas_productos_bd(datos)
         for result in data:
-            productos.append(
+            children.append(
                 {
                     'value': result[0],
                     'label': result[1],
@@ -69,11 +77,13 @@ class VentasService:
                     'total': result[4],
                 }
             )
+        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        productos.append(tree)
         return productos
 
-    def get_ventas(self, ventas_repository: VentasRepository,cliente, usuario, ano, mes, producto):
+    def get_ventas(self, ventas_repository: VentasRepository, datos):
         ventas = []
-        data = ventas_repository.get_ventas_bd(cliente, usuario, ano, mes, producto)
+        data = ventas_repository.get_ventas_bd(datos)
         for result in data:
             ventas.append(
                 {
