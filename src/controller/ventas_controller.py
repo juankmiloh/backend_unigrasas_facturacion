@@ -36,6 +36,9 @@ def listclientes(ventas_service: VentasService, ventas_repository: VentasReposit
 def listusuarios(ventas_service: VentasService, ventas_repository: VentasRepository):
     # DATA
     datos = request.json
+    print('--------------------------------')
+    print('DATA USUARIOS -> ', datos)
+    print('--------------------------------')
     return json.dumps(ventas_service.get_ventas_usuarios(ventas_repository, datos))
 
 # Obtener listado de productos en ventas terminadas x cliente x usuario x producto
@@ -43,11 +46,21 @@ def listusuarios(ventas_service: VentasService, ventas_repository: VentasReposit
 def listproductos(ventas_service: VentasService, ventas_repository: VentasRepository):
     # DATA
     datos = request.json
+    print('--------------------------------')
+    print('DATA PRODUCTOS -> ', datos)
+    print('--------------------------------')
     return json.dumps(ventas_service.get_ventas_productos(ventas_repository, datos))
 
-# Obtener total de ventas x ano x mes
-@controller.route(API_ROOT_PATH + 'ventas', methods=['POST'])
-def ventas(ventas_service: VentasService, ventas_repository: VentasRepository):
+# Obtener total de ventas x ano
+@controller.route(API_ROOT_PATH + 'ventas_ano', methods=['POST'])
+def ventasano(ventas_service: VentasService, ventas_repository: VentasRepository):
     # DATA
     datos = request.json
-    return json.dumps(ventas_service.get_ventas(ventas_repository, datos))
+    return json.dumps(ventas_service.get_ventas_ano(ventas_repository, datos))
+
+# Obtener total de ventas x ano x mes
+@controller.route(API_ROOT_PATH + 'ventas_ano_mes', methods=['POST'])
+def ventasanomes(ventas_service: VentasService, ventas_repository: VentasRepository):
+    # DATA
+    datos = request.json
+    return json.dumps(ventas_service.get_ventas_ano_mes(ventas_repository, datos))

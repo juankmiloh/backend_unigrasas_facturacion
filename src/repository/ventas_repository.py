@@ -25,21 +25,24 @@ class VentasRepository:
             SELECT C.IDCLIENTE, C.NOMBRE FROM FACTURA F, CLIENTE C
             WHERE IDESTADO = 2
             AND F.IDCLIENTE = C.IDCLIENTE
+            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
-            GROUP BY C.IDCLIENTE, C.NOMBRE;
+            GROUP BY C.IDCLIENTE, C.NOMBRE
+            ORDER BY C.NOMBRE;
         '''
-        return self.db.engine.execute(text(sql), ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
+        return self.db.engine.execute(text(sql), USUARIO_ARG=datos['usuario'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
     
     def get_ventas_usuarios_bd(self, datos):
         sql = '''
             SELECT U.IDUSUARIO, U.NOMBRE FROM FACTURA F, USUARIO U
             WHERE IDESTADO = 2
             AND F.IDUSUARIO = U.IDUSUARIO
-            AND (F.IDCLIENTE = :CLIENTE_ARG OR 0 = :CLIENTE_ARG)
-            AND (DATE_FORMAT(F.F_PAGO, '%Y') = :ANO_ARG OR 0 = :ANO_ARG)
-            AND (DATE_FORMAT(F.F_PAGO, '%m') = :MES_ARG OR 0 = :MES_ARG)
-            GROUP BY U.IDUSUARIO, U.NOMBRE;
+            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            GROUP BY U.IDUSUARIO, U.NOMBRE
+            ORDER BY U.NOMBRE ASC;
         '''
         return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
     
@@ -48,25 +51,40 @@ class VentasRepository:
             SELECT FI.IDITEM, I.NOMBRE, FI.CANTIDAD, FI.PRECIO, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
             WHERE F.IDFACTURA = FI.IDFACTURA
             AND FI.IDITEM = I.IDITEM
-            AND (F.IDCLIENTE = :CLIENTE_ARG OR 0 = :CLIENTE_ARG)
-            AND (F.IDUSUARIO = :USUARIO_ARG OR 0 = :USUARIO_ARG)
-            AND (FI.IDITEM = :ITEM_ARG OR 0 = :ITEM_ARG)
-            AND (DATE_FORMAT(F.F_PAGO, '%Y') = :ANO_ARG OR 0 = :ANO_ARG)
-            AND (DATE_FORMAT(F.F_PAGO, '%m') = :MES_ARG OR 0 = :MES_ARG)
-            GROUP BY FI.IDITEM, I.NOMBRE;
+            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
+            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
+            AND (FI.IDITEM IN :ITEM_ARG OR 0 IN :ITEM_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            GROUP BY FI.IDITEM, I.NOMBRE
+            ORDER BY I.NOMBRE ASC;
         '''
         return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes'], USUARIO_ARG=datos['usuario'], ITEM_ARG=datos['producto']).fetchall()
 
-    def get_ventas_bd(self, datos):
+    def get_ventas_ano_bd(self, datos):
+        sql = '''
+            SELECT DATE_FORMAT(F.F_PAGO, '%Y') ANO, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
+            WHERE F.IDFACTURA = FI.IDFACTURA
+            AND FI.IDITEM = I.IDITEM
+            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
+            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
+            AND (FI.IDITEM IN :ITEM_ARG OR 0 IN :ITEM_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            GROUP BY DATE_FORMAT(F.F_PAGO, '%Y');
+        '''
+        return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes'], USUARIO_ARG=datos['usuario'], ITEM_ARG=datos['producto']).fetchall()
+    
+    def get_ventas_ano_mes_bd(self, datos):
         sql = '''
             SELECT DATE_FORMAT(F.F_PAGO, '%Y') ANO, DATE_FORMAT(F.F_PAGO, '%m') MES, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
             WHERE F.IDFACTURA = FI.IDFACTURA
             AND FI.IDITEM = I.IDITEM
-            AND (F.IDCLIENTE = :CLIENTE_ARG OR 0 = :CLIENTE_ARG)
-            AND (F.IDUSUARIO = :USUARIO_ARG OR 0 = :USUARIO_ARG)
-            AND (FI.IDITEM = :ITEM_ARG OR 0 = :ITEM_ARG)
-            AND (DATE_FORMAT(F.F_PAGO, '%Y') = :ANO_ARG OR 0 = :ANO_ARG)
-            AND (DATE_FORMAT(F.F_PAGO, '%m') = :MES_ARG OR 0 = :MES_ARG)
+            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
+            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
+            AND (FI.IDITEM IN :ITEM_ARG OR 0 IN :ITEM_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
             GROUP BY DATE_FORMAT(F.F_PAGO, '%Y'), DATE_FORMAT(F.F_PAGO, '%m');
         '''
         return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes'], USUARIO_ARG=datos['usuario'], ITEM_ARG=datos['producto']).fetchall()

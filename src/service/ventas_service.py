@@ -13,7 +13,7 @@ class VentasService:
                     'label': result[0],
                 }
             )
-        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
         anos.append(tree)
         return anos
     
@@ -29,7 +29,7 @@ class VentasService:
                     'label': nombres[result[0] - 1],
                 }
             )
-        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
         meses.append(tree)
         return meses
     
@@ -44,7 +44,7 @@ class VentasService:
                     'label': result[1],
                 }
             )
-        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
         clientes.append(tree)
         return clientes
     
@@ -56,10 +56,10 @@ class VentasService:
             children.append(
                 {
                     'id': result[0],
-                    'label': result[1],
+                    'label': result[1].upper(),
                 }
             )
-        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
         usuarios.append(tree)
         return usuarios
     
@@ -70,20 +70,32 @@ class VentasService:
         for result in data:
             children.append(
                 {
-                    'value': result[0],
+                    'id': result[0],
                     'label': result[1],
                     'cantidad': result[2],
                     'precio': result[3],
                     'total': result[4],
                 }
             )
-        tree = {'id': 0, 'label': 'Todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
         productos.append(tree)
         return productos
 
-    def get_ventas(self, ventas_repository: VentasRepository, datos):
+    def get_ventas_ano(self, ventas_repository: VentasRepository, datos):
         ventas = []
-        data = ventas_repository.get_ventas_bd(datos)
+        data = ventas_repository.get_ventas_ano_bd(datos)
+        for result in data:
+            ventas.append(
+                {
+                    'ano': result[0],
+                    'venta': result[1],
+                }
+            )
+        return ventas
+    
+    def get_ventas_ano_mes(self, ventas_repository: VentasRepository, datos):
+        ventas = []
+        data = ventas_repository.get_ventas_ano_mes_bd(datos)
         for result in data:
             ventas.append(
                 {
