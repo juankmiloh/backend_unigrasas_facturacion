@@ -16,7 +16,7 @@ class VentasRepository:
         sql = '''
             SELECT CONVERT((DATE_FORMAT(F_PAGO, '%m')), SIGNED INTEGER) MES FROM FACTURA
             WHERE (DATE_FORMAT(F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
-            GROUP BY DATE_FORMAT(F_PAGO, '%m');
+            GROUP BY CONVERT((DATE_FORMAT(F_PAGO, '%m')), SIGNED INTEGER);
         '''
         return self.db.engine.execute(text(sql), ANO_ARG=ano).fetchall()
     
@@ -48,7 +48,7 @@ class VentasRepository:
     
     def get_ventas_productos_bd(self, datos):
         sql = '''
-            SELECT FI.IDITEM, I.NOMBRE, FI.CANTIDAD, FI.PRECIO, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
+            SELECT FI.IDITEM, I.NOMBRE, SUM(FI.CANTIDAD) CANTIDAD, AVG(FI.PRECIO) PRECIO_PROM, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
             WHERE F.IDFACTURA = FI.IDFACTURA
             AND FI.IDITEM = I.IDITEM
             AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)

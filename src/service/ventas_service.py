@@ -26,7 +26,7 @@ class VentasService:
             children.append(
                 {
                     'id': result[0],
-                    'label': nombres[result[0] - 1],
+                    'label': nombres[result[0] - 1].upper(),
                 }
             )
         tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
@@ -72,9 +72,9 @@ class VentasService:
                 {
                     'id': result[0],
                     'label': result[1],
-                    'cantidad': result[2],
-                    'precio': result[3],
-                    'total': result[4],
+                    'cantidad': str(result[2]),
+                    'precio': str(result[3]),
+                    'total': str(result[4]),
                 }
             )
         tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
