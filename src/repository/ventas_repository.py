@@ -22,34 +22,39 @@ class VentasRepository:
     
     def get_ventas_clientes_bd(self, datos):
         sql = '''
-            SELECT C.IDCLIENTE, C.NOMBRE FROM FACTURA F, CLIENTE C
+            SELECT C.IDCLIENTE, C.NOMBRE, SUM(FI.CANTIDAD) CANTIDAD, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL
+            FROM FACTURA F, CLIENTE C, FACTURA_HAS_ITEM FI
             WHERE IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
             AND F.IDCLIENTE = C.IDCLIENTE
-            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
+            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
             GROUP BY C.IDCLIENTE, C.NOMBRE
-            ORDER BY C.NOMBRE;
+            ORDER BY C.NOMBRE ASC;
         '''
-        return self.db.engine.execute(text(sql), USUARIO_ARG=datos['usuario'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
+        return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
     
     def get_ventas_usuarios_bd(self, datos):
         sql = '''
-            SELECT U.IDUSUARIO, U.NOMBRE FROM FACTURA F, USUARIO U
+            SELECT U.IDUSUARIO, U.NOMBRE, SUM(FI.CANTIDAD) CANTIDAD, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL
+            FROM FACTURA F, USUARIO U, FACTURA_HAS_ITEM FI
             WHERE IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
             AND F.IDUSUARIO = U.IDUSUARIO
-            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
+            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
             GROUP BY U.IDUSUARIO, U.NOMBRE
             ORDER BY U.NOMBRE ASC;
         '''
-        return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
+        return self.db.engine.execute(text(sql), USUARIO_ARG=datos['usuario'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
     
     def get_ventas_productos_bd(self, datos):
         sql = '''
             SELECT FI.IDITEM, I.NOMBRE, SUM(FI.CANTIDAD) CANTIDAD, AVG(FI.PRECIO) PRECIO_PROM, SUM(FI.CANTIDAD * FI.PRECIO) TOTAL FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
-            WHERE F.IDFACTURA = FI.IDFACTURA
+            WHERE IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
             AND FI.IDITEM = I.IDITEM
             AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
             AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)

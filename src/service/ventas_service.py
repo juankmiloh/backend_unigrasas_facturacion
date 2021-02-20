@@ -36,48 +36,58 @@ class VentasService:
     def get_ventas_clientes(self, ventas_repository: VentasRepository, datos):
         clientes = []
         children = []
+        tableColumns = [{'label': 'Cliente', 'prop': 'label', 'width': '','width_xs': ''},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': ''},
+                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': ''}]
         data = ventas_repository.get_ventas_clientes_bd(datos)
         for result in data:
             children.append(
                 {
                     'id': result[0],
                     'label': result[1],
+                    'cantidad': float(result[2]),
+                    'total': float(result[3]),
                 }
             )
-        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children), 'tablecolumns': tableColumns}
         clientes.append(tree)
         return clientes
     
     def get_ventas_usuarios(self, ventas_repository: VentasRepository, datos):
         usuarios = []
         children = []
+        tableColumns = [{'label': 'Cliente', 'prop': 'label', 'width': '','width_xs': ''},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': ''},
+                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': ''}]
         data = ventas_repository.get_ventas_usuarios_bd(datos)
         for result in data:
             children.append(
                 {
                     'id': result[0],
-                    'label': result[1].upper(),
+                    'label': result[1],
+                    'cantidad': float(result[2]),
+                    'total': float(result[3]),
                 }
             )
-        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children), 'tablecolumns': tableColumns}
         usuarios.append(tree)
         return usuarios
     
     def get_ventas_productos(self, ventas_repository: VentasRepository, datos):
         productos = []
         children = []
+        tableColumns = [{'label': 'Producto', 'prop': 'label', 'width': '200','width_xs': ''},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': ''},
+                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': ''}, {'label': 'Promedio', 'prop': 'precio', 'width': '', 'width_xs': ''}]
         data = ventas_repository.get_ventas_productos_bd(datos)
         for result in data:
             children.append(
                 {
                     'id': result[0],
                     'label': result[1],
-                    'cantidad': str(result[2]),
-                    'precio': str(result[3]),
-                    'total': str(result[4]),
+                    'cantidad': float(result[2]),
+                    'precio': float(result[3]),
+                    'total': float(result[4]),
                 }
             )
-        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children)}
+        tree = {'id': 0, 'label': 'Seleccionar todo', 'children': children, 'total': len(children), 'tablecolumns': tableColumns}
         productos.append(tree)
         return productos
 
