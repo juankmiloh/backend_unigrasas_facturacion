@@ -6,11 +6,14 @@ from ..repository import InformeRepository
 from ..util.constants import API_ROOT_PATH
 
 
-@controller.route(API_ROOT_PATH + 'procesos_empresa', methods=['GET'])
-def procesosEmpresa(informe_service: InformeService, informe_repository: InformeRepository):
-    # Id servicio
-    idservicio = request.args.get('idservicio', default='', type=int)
-    return json.dumps(informe_service.get_cantidad_procesos_empresa(informe_repository, idservicio))
+@controller.route(API_ROOT_PATH + 'cliente_producto', methods=['POST'])
+def clienteProducto(informe_service: InformeService, informe_repository: InformeRepository):
+    # DATA
+    datos = request.json
+    print('--------------------------------')
+    print('DATA CLIENTES -> ', datos)
+    print('--------------------------------')
+    return json.dumps(informe_service.get_producto_cliente(informe_repository, datos))
 
 @controller.route(API_ROOT_PATH + 'procesos_causal', methods=['GET'])
 def procesosCausas(informe_service: InformeService, informe_repository: InformeRepository):

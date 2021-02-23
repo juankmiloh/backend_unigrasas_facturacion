@@ -36,8 +36,8 @@ class VentasService:
     def get_ventas_clientes(self, ventas_repository: VentasRepository, datos):
         clientes = []
         children = []
-        tableColumns = [{'label': 'Cliente', 'prop': 'label', 'width': '','width_xs': ''},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': ''},
-                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': ''}]
+        tableColumns = [{'label': 'Cliente', 'prop': 'label', 'width': '','width_xs': '200'},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': '110'},
+                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': '200'}]
         data = ventas_repository.get_ventas_clientes_bd(datos)
         for result in data:
             children.append(
@@ -55,8 +55,8 @@ class VentasService:
     def get_ventas_usuarios(self, ventas_repository: VentasRepository, datos):
         usuarios = []
         children = []
-        tableColumns = [{'label': 'Cliente', 'prop': 'label', 'width': '','width_xs': ''},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': ''},
-                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': ''}]
+        tableColumns = [{'label': 'Cliente', 'prop': 'label', 'width': '','width_xs': '200'},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': '110'},
+                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': '200'}]
         data = ventas_repository.get_ventas_usuarios_bd(datos)
         for result in data:
             children.append(
@@ -74,8 +74,8 @@ class VentasService:
     def get_ventas_productos(self, ventas_repository: VentasRepository, datos):
         productos = []
         children = []
-        tableColumns = [{'label': 'Producto', 'prop': 'label', 'width': '200','width_xs': ''},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': ''},
-                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': ''}, {'label': 'Promedio', 'prop': 'precio', 'width': '', 'width_xs': ''}]
+        tableColumns = [{'label': 'Producto', 'prop': 'label', 'width': '200','width_xs': '200'},{'label': 'Cantidad', 'prop': 'cantidad', 'width': '', 'width_xs': '110'},
+                        {'label': 'Total', 'prop': 'total', 'width': '', 'width_xs': '200'}, {'label': 'Promedio', 'prop': 'precio', 'width': '', 'width_xs': '110'}]
         data = ventas_repository.get_ventas_productos_bd(datos)
         for result in data:
             children.append(

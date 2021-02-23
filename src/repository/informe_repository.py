@@ -17,30 +17,34 @@ class InformeRepository:
         '''
         return self.db.engine.execute(text(sql), IDSERVICIO_ARG=idservicio).fetchall()
 
-    # DATOS EMPRESA
+    # DATOS CLIENTE
     
-    def get_cantidad_procesos_empresa_bd(self, fase, idservicio):
+    def get_cantidad_producto_cliente(self, datos):
         sql = '''
             SELECT SUM(FI.CANTIDAD) AS CANTIDAD, I.NOMBRE FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
-            WHERE F.IDFACTURA = FI.IDFACTURA
+            WHERE F.IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
             AND FI.IDITEM = I.IDITEM
-            AND F.IDESTADO = :FASE_ARG
-            AND (F.IDCLIENTE = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-            GROUP BY F.IDESTADO, I.NOMBRE;
+            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            GROUP BY I.NOMBRE;
         '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
+        return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
 
-    def get_procesos_empresa_bd(self, fase, idservicio):
+    def get_producto_cliente_bd(self, datos):
         sql = '''
             SELECT F.IDFACTURA, I.NOMBRE, SUM(FI.CANTIDAD) AS CANTIDAD FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
-            WHERE F.IDFACTURA = FI.IDFACTURA
+            WHERE F.IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
             AND FI.IDITEM = I.IDITEM
-            AND F.IDESTADO = :FASE_ARG
-            AND (F.IDCLIENTE = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
+            AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
             GROUP BY F.IDFACTURA, F.IDESTADO, I.NOMBRE
             ORDER BY F.IDFACTURA DESC;
         '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
+        return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
 
     # DATOS CAUSAL
     
