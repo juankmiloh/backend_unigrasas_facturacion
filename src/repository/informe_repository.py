@@ -17,7 +17,37 @@ class InformeRepository:
         '''
         return self.db.engine.execute(text(sql), IDSERVICIO_ARG=idservicio).fetchall()
 
-    # DATOS CLIENTE
+    # DATOS VENTAS X PRODUCTO
+    
+    def get_cantidad_cliente_producto(self, datos):
+        sql = '''
+            SELECT SUM(FI.CANTIDAD) AS CANTIDAD, C.NOMBRE FROM FACTURA F, CLIENTE C, FACTURA_HAS_ITEM FI
+            WHERE F.IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
+            AND F.IDCLIENTE = C.IDCLIENTE
+            AND (FI.IDITEM IN :ITEM_ARG OR 0 IN :ITEM_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            GROUP BY C.NOMBRE;
+        '''
+        return self.db.engine.execute(text(sql), ITEM_ARG=datos['producto'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
+
+    def get_cliente_producto_bd(self, datos):
+        sql = '''
+            SELECT F.IDFACTURA, I.NOMBRE, C.NOMBRE, FI.CANTIDAD, FI.PRECIO, (FI.CANTIDAD * FI.PRECIO) AS TOTAL, DATE_FORMAT(F.F_PAGO, '%Y-%m') AS FECHA
+            FROM FACTURA F, CLIENTE C, FACTURA_HAS_ITEM FI, ITEM I
+            WHERE F.IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
+            AND F.IDCLIENTE = C.IDCLIENTE
+            AND FI.IDITEM = I.IDITEM
+            AND (FI.IDITEM IN :ITEM_ARG OR 0 IN :ITEM_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            ORDER BY I.NOMBRE ASC;
+        '''
+        return self.db.engine.execute(text(sql), ITEM_ARG=datos['producto'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
+
+    # DATOS VENTAS X CLIENTE
     
     def get_cantidad_producto_cliente(self, datos):
         sql = '''
@@ -34,151 +64,46 @@ class InformeRepository:
 
     def get_producto_cliente_bd(self, datos):
         sql = '''
-            SELECT F.IDFACTURA, I.NOMBRE, SUM(FI.CANTIDAD) AS CANTIDAD FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I
+            SELECT F.IDFACTURA, C.NOMBRE, I.NOMBRE, FI.CANTIDAD, FI.PRECIO, (FI.CANTIDAD * FI.PRECIO) AS TOTAL, DATE_FORMAT(F.F_PAGO, '%Y-%m') AS FECHA 
+            FROM FACTURA F, FACTURA_HAS_ITEM FI, ITEM I, CLIENTE C
             WHERE F.IDESTADO = 2
             AND F.IDFACTURA = FI.IDFACTURA
             AND FI.IDITEM = I.IDITEM
+            AND F.IDCLIENTE = C.IDCLIENTE
             AND (F.IDCLIENTE IN :CLIENTE_ARG OR 0 IN :CLIENTE_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
-            GROUP BY F.IDFACTURA, F.IDESTADO, I.NOMBRE
-            ORDER BY F.IDFACTURA DESC;
+            ORDER BY C.NOMBRE ASC;
         '''
         return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
+    
+    # DATOS VENTAS X VENDEDOR
+    
+    def get_cantidad_cliente_vendedor(self, datos):
+        sql = '''
+            SELECT SUM(FI.CANTIDAD) AS CANTIDAD, C.NOMBRE FROM FACTURA F, CLIENTE C, FACTURA_HAS_ITEM FI
+            WHERE F.IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
+            AND F.IDCLIENTE = C.IDCLIENTE
+            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            GROUP BY C.NOMBRE;
+        '''
+        return self.db.engine.execute(text(sql), USUARIO_ARG=datos['usuario'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()
 
-    # DATOS CAUSAL
-    
-    def get_cantidad_procesos_causal_bd(self, fase, idservicio):
+    def get_cliente_vendedor_bd(self, datos):
         sql = '''
-            SELECT COUNT(*), C.NOMBRECAUSAL FROM PROCESO P, PROCESO_CAUSAL PC, CAUSAL C
-            WHERE 
-                P.FASE = :FASE_ARG
-                AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                AND P.IDPROCESO = PC.IDPROCESO
-                AND PC.IDCAUSAL = C.IDCAUSAL
-            GROUP BY 
-                PC.IDCAUSAL,
-                C.NOMBRECAUSAL;
+            SELECT F.IDFACTURA, U.NOMBRE, C.NOMBRE, SUM(FI.CANTIDAD), SUM(FI.CANTIDAD * FI.PRECIO) AS TOTAL, DATE_FORMAT(F.F_PAGO, '%Y-%m') AS FECHA 
+            FROM FACTURA F, CLIENTE C, USUARIO U, FACTURA_HAS_ITEM FI
+            WHERE F.IDESTADO = 2
+            AND F.IDFACTURA = FI.IDFACTURA
+            AND F.IDCLIENTE = C.IDCLIENTE
+            AND F.IDUSUARIO = U.IDUSUARIO
+            AND (F.IDUSUARIO IN :USUARIO_ARG OR 0 IN :USUARIO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
+            AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
+            GROUP BY F.IDFACTURA, U.NOMBRE, C.NOMBRE, DATE_FORMAT(F.F_PAGO, '%Y-%m')
+            ORDER BY U.NOMBRE;
         '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
-
-    def get_procesos_causal_bd(self, fase, idservicio):
-        sql = '''
-            SELECT P.IDPROCESO, P.RADICADOPROCESO, C.NOMBRECAUSAL FROM PROCESO P, PROCESO_CAUSAL PC, CAUSAL C
-            WHERE 
-                P.FASE = :FASE_ARG
-                AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                AND P.IDPROCESO = PC.IDPROCESO
-                AND PC.IDCAUSAL = C.IDCAUSAL;
-        '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
-
-    # DATOS USUARIO
-    
-    def get_cantidad_procesos_usuario_bd(self, fase, idservicio):
-        sql = '''
-            SELECT COUNT(*), U.NOMBRE||' '||U.APELLIDO FROM PROCESO P, USUARIOS U
-            WHERE
-                P.FASE = :FASE_ARG
-                AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                AND P.USUARIOASIGNADO = U.IDUSUARIO
-            GROUP BY U.NOMBRE||' '||U.APELLIDO;
-        '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
-    
-    def get_procesos_usuario_bd(self, fase, idservicio):
-        sql = '''
-            SELECT P.IDPROCESO, P.RADICADOPROCESO, U.NOMBRE||' '||U.APELLIDO FROM PROCESO P, USUARIOS U
-            WHERE
-                P.FASE = :FASE_ARG
-                AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                AND P.USUARIOASIGNADO = U.IDUSUARIO;
-        '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
-
-    # DATOS ESTADO
-    
-    def get_cantidad_procesos_estado_bd(self, fase, idservicio):
-        sql = '''
-            SELECT COUNT(*), ESTADO FROM
-            (
-                SELECT 
-                    P.IDPROCESO,
-                    P.RADICADOPROCESO AS EXPEDIENTE,
-                    P.FECHACADUCIDAD AS CADUCIDAD,
-                    EMP.NOMBRE AS EMPRESA,
-                    ES.NOMBREESTADO AS ESTADO,
-                    S.NOMBRE AS SERVICIO,
-                    U.IDUSUARIO AS IDUSUARIO,
-                    U.NOMBRE || ' ' || U.APELLIDO AS USUARIO,
-                    EP.ETAPA
-                FROM
-                    EMPRESA EMP, SERVICIO S, PROCESO P, USUARIOS U, ETAPA_PROCESO EP, ETAPA E, ESTADO ES
-                WHERE
-                    P.FASE = :FASE_ARG
-                    AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                    AND P.IDPROCESO = EP.PROCESO
-                    AND EP.ETAPA = E.IDETAPA
-                    AND E.IDESTADO = ES.IDESTADO
-                    AND P.EMPRESA = EMP.IDEMPRESA
-                    AND EMP.SERVICIO = S.IDSERVICIO
-                    AND P.IDSERVICIO = S.IDSERVICIO
-                    AND P.USUARIOASIGNADO = U.IDUSUARIO
-            ) PROCESO,
-            (
-                SELECT 
-                    P.IDPROCESO,
-                    MIN(EP.ETAPA) AS IDETAPA
-                FROM PROCESO P, ETAPA_PROCESO EP
-                WHERE
-                    P.IDPROCESO = EP.PROCESO
-                GROUP BY P.IDPROCESO
-            ) ETAPA
-            WHERE
-                PROCESO.IDPROCESO = ETAPA.IDPROCESO
-                AND PROCESO.ETAPA = ETAPA.IDETAPA
-            GROUP BY ESTADO;
-        '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
-    
-    def get_procesos_estado_bd(self, fase, idservicio):
-        sql = '''
-            SELECT PROCESO.IDPROCESO, PROCESO.EXPEDIENTE, ESTADO FROM
-            (
-                SELECT 
-                    P.IDPROCESO,
-                    P.RADICADOPROCESO AS EXPEDIENTE,
-                    P.FECHACADUCIDAD AS CADUCIDAD,
-                    EMP.NOMBRE AS EMPRESA,
-                    ES.NOMBREESTADO AS ESTADO,
-                    S.NOMBRE AS SERVICIO,
-                    U.IDUSUARIO AS IDUSUARIO,
-                    U.NOMBRE || ' ' || U.APELLIDO AS USUARIO,
-                    EP.ETAPA
-                FROM
-                    EMPRESA EMP, SERVICIO S, PROCESO P, USUARIOS U, ETAPA_PROCESO EP, ETAPA E, ESTADO ES
-                WHERE
-                    P.FASE = :FASE_ARG
-                    AND (P.IDSERVICIO = :IDSERVICIO_ARG OR 0 = :IDSERVICIO_ARG)
-                    AND P.IDPROCESO = EP.PROCESO
-                    AND EP.ETAPA = E.IDETAPA
-                    AND E.IDESTADO = ES.IDESTADO
-                    AND P.EMPRESA = EMP.IDEMPRESA
-                    AND EMP.SERVICIO = S.IDSERVICIO
-                    AND P.IDSERVICIO = S.IDSERVICIO
-                    AND P.USUARIOASIGNADO = U.IDUSUARIO
-            ) PROCESO,
-            (
-                SELECT 
-                    P.IDPROCESO,
-                    MIN(EP.ETAPA) AS IDETAPA
-                FROM PROCESO P, ETAPA_PROCESO EP
-                WHERE
-                    P.IDPROCESO = EP.PROCESO
-                GROUP BY P.IDPROCESO
-            ) ETAPA
-            WHERE
-                PROCESO.IDPROCESO = ETAPA.IDPROCESO
-                AND PROCESO.ETAPA = ETAPA.IDETAPA;
-        '''
-        return self.db.engine.execute(text(sql), FASE_ARG=fase, IDSERVICIO_ARG=idservicio).fetchall()
+        return self.db.engine.execute(text(sql), USUARIO_ARG=datos['usuario'], ANO_ARG=datos['ano'], MES_ARG=datos['mes']).fetchall()

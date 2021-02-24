@@ -6,6 +6,15 @@ from ..repository import InformeRepository
 from ..util.constants import API_ROOT_PATH
 
 
+@controller.route(API_ROOT_PATH + 'producto_cliente', methods=['POST'])
+def productoCliente(informe_service: InformeService, informe_repository: InformeRepository):
+    # DATA
+    datos = request.json
+    print('--------------------------------')
+    print('DATA PRODUCTOS -> ', datos)
+    print('--------------------------------')
+    return json.dumps(informe_service.get_cliente_producto(informe_repository, datos))
+
 @controller.route(API_ROOT_PATH + 'cliente_producto', methods=['POST'])
 def clienteProducto(informe_service: InformeService, informe_repository: InformeRepository):
     # DATA
@@ -15,26 +24,11 @@ def clienteProducto(informe_service: InformeService, informe_repository: Informe
     print('--------------------------------')
     return json.dumps(informe_service.get_producto_cliente(informe_repository, datos))
 
-@controller.route(API_ROOT_PATH + 'procesos_causal', methods=['GET'])
-def procesosCausas(informe_service: InformeService, informe_repository: InformeRepository):
-    # Id servicio
-    idservicio = request.args.get('idservicio', default='', type=int)
-    return json.dumps(informe_service.get_cantidad_procesos_causal(informe_repository, idservicio))
-
-@controller.route(API_ROOT_PATH + 'procesos_estado', methods=['GET'])
-def procesosEstado(informe_service: InformeService, informe_repository: InformeRepository):
-    # Id servicio
-    idservicio = request.args.get('idservicio', default='', type=int)
-    return json.dumps(informe_service.get_cantidad_procesos_estado(informe_repository, idservicio))
-
-@controller.route(API_ROOT_PATH + 'procesos_usuario', methods=['GET'])
-def procesosUsuario(informe_service: InformeService, informe_repository: InformeRepository):
-    # Id servicio
-    idservicio = request.args.get('idservicio', default='', type=int)
-    return json.dumps(informe_service.get_cantidad_procesos_usuario(informe_repository, idservicio))
-
-@controller.route(API_ROOT_PATH + 'cantidad_procesos', methods=['GET'])
-def procesosCantidad(informe_service: InformeService, informe_repository: InformeRepository):
-    # Id servicio
-    idservicio = request.args.get('idservicio', default='', type=int)
-    return json.dumps(informe_service.get_cantidad_procesos(informe_repository, idservicio))
+@controller.route(API_ROOT_PATH + 'vendedor_cliente', methods=['POST'])
+def vendedorCliente(informe_service: InformeService, informe_repository: InformeRepository):
+    # DATA
+    datos = request.json
+    print('--------------------------------')
+    print('DATA VENDEDOR -> ', datos)
+    print('--------------------------------')
+    return json.dumps(informe_service.get_cliente_vendedor(informe_repository, datos))

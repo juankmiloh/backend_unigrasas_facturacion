@@ -20,36 +20,113 @@ class InformeService:
             }
         return procesos
 
-    def get_producto_cliente(self, informe_repository: InformeRepository, datos):
-        
-        pieChartData = {}
-
-        empPterminados = []
-        pterminados = []
-
+    def get_cliente_producto(self, informe_repository: InformeRepository, datos):
+        response = {}
+        pieLeyendaData = []
+        pieChartData = []
+        dataTable = []
         columnsTable = [
             {
                 'label': 'Factura',
                 'prop': 'idfactura'
             },
             {
+                'label': 'Cliente',
+                'prop': 'cliente'
+            },
+            {
                 'label': 'Producto',
-                'prop': 'item'
+                'prop': 'producto'
             },
             {
                 'label': 'Cantidad',
                 'prop': 'cantidad'
+            },
+            {
+                'label': 'Precio Venta',
+                'prop': 'precio'
+            },
+            {
+                'label': 'Fecha',
+                'prop': 'fecha'
             }
         ]
 
-        dataTerminados = []
+        # CONSULTA DE INFORMACION
 
-        # PROCESOS TERMINADOS
+        data = informe_repository.get_cantidad_cliente_producto(datos)
+        for result in data:
+            pieLeyendaData.append(result[1].capitalize())
+            pieChartData.append(
+                {
+                    'value': int(result[0]),
+                    'name': result[1].capitalize()
+                }
+            )
+
+        data = informe_repository.get_cliente_producto_bd(datos)
+        for result in data:
+            dataTable.append(
+                {
+                    'idfactura': result[0],
+                    'producto': result[1],
+                    'cliente': result[2],
+                    'cantidad': float(result[3]),
+                    'precio': float(result[4]),
+                    'total': float(result[5]),
+                    'fecha': result[6]
+                }
+            )
+        
+        # SE ESTRUCTURA EL OBJETO JSON DE RESPUESTA
+
+        response = {
+            'title': 'Cliente',
+            'leyenda': pieLeyendaData,
+            'datos': pieChartData,
+            'columns': columnsTable,
+            'data': dataTable
+        }
+        return response
+
+    def get_producto_cliente(self, informe_repository: InformeRepository, datos):
+        response = {}
+        pieLeyendaData = []
+        pieChartData = []
+        dataTable = []
+        columnsTable = [
+            {
+                'label': 'Factura',
+                'prop': 'idfactura'
+            },
+            {
+                'label': 'Cliente',
+                'prop': 'cliente'
+            },
+            {
+                'label': 'Producto',
+                'prop': 'producto'
+            },
+            {
+                'label': 'Cantidad',
+                'prop': 'cantidad'
+            },
+            {
+                'label': 'Precio Venta',
+                'prop': 'precio'
+            },
+            {
+                'label': 'Fecha',
+                'prop': 'fecha'
+            }
+        ]
+
+        # CONSULTA DE INFORMACION
 
         data = informe_repository.get_cantidad_producto_cliente(datos)
         for result in data:
-            empPterminados.append(result[1].capitalize())
-            pterminados.append(
+            pieLeyendaData.append(result[1].capitalize())
+            pieChartData.append(
                 {
                     'value': int(result[0]),
                     'name': result[1].capitalize()
@@ -58,411 +135,93 @@ class InformeService:
 
         data = informe_repository.get_producto_cliente_bd(datos)
         for result in data:
-            dataTerminados.append(
+            dataTable.append(
                 {
                     'idfactura': result[0],
-                    'item': result[1],
-                    'cantidad': int(result[2]),
-                    'fase': 'Terminado'
+                    'cliente': result[1],
+                    'producto': result[2],
+                    'cantidad': float(result[3]),
+                    'precio': float(result[4]),
+                    'total': float(result[4]),
+                    'fecha': result[5]
                 }
             )
         
         # SE ESTRUCTURA EL OBJETO JSON DE RESPUESTA
 
-        pieChartData = {
-            'pagado': {
-                'title': 'Producto',
-                'leyenda': empPterminados,
-                'datos': pterminados,
-                'columns': columnsTable,
-                'data': dataTerminados
-            }
+        response = {
+            'title': 'Producto',
+            'leyenda': pieLeyendaData,
+            'datos': pieChartData,
+            'columns': columnsTable,
+            'data': dataTable
         }
-        return pieChartData
-
-    def get_cantidad_procesos_causal(self, informe_repository: InformeRepository, idservicio):
-        pieChartData = {}
-
-        empPactivos = []
-        pactivos = []
-        empPterminados = []
-        pterminados = []
-        empPeliminados = []
-        peliminados = []
-
-        columnsTable = [
-            {
-                'label': '#',
-                'prop': 'idproceso'
-            },
-            {
-                'label': 'Expediente',
-                'prop': 'expediente'
-            },
-            {
-                'label': 'Causa',
-                'prop': 'causa'
-            },
-            {
-                'label': 'Fase',
-                'prop': 'fase'
-            }
-        ]
-
-        dataActivos = []
-        dataEliminados = []
-        dataTerminados = []
-
-        # PROCESOS ACTIVOS
-
-        data = informe_repository.get_cantidad_procesos_causal_bd(1, idservicio)
-        for result in data:
-            empPactivos.append(result[1])
-            pactivos.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_causal_bd(1, idservicio)
-        for result in data:
-            dataActivos.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'causa': result[2].capitalize(),
-                    'fase': 'Activo'
-                }
-            )
-
-        # PROCESOS TERMINADOS
-
-        data = informe_repository.get_cantidad_procesos_causal_bd(2, idservicio)
-        for result in data:
-            empPterminados.append(result[1])
-            pterminados.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_causal_bd(2, idservicio)
-        for result in data:
-            dataTerminados.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'causa': result[2].capitalize(),
-                    'fase': 'Terminado'
-                }
-            )
-
-        # PROCESOS ELIMINADOS
-
-        data = informe_repository.get_cantidad_procesos_causal_bd(3, idservicio)
-        for result in data:
-            empPeliminados.append(result[1])
-            peliminados.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_causal_bd(3, idservicio)
-        for result in data:
-            dataEliminados.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'causa': result[2].capitalize(),
-                    'fase': 'Eliminado'
-                }
-            )
-
-        # SE ESTRUCTURA EL OBJETO JSON DE RESPUESTA
-        
-        pieChartData = {
-            'activos': {
-                'title': 'Procesos activos',
-                'leyenda': empPactivos,
-                'datos': pactivos,
-                'columns': columnsTable,
-                'data': dataActivos
-            },
-            'terminados': {
-                'title': 'Procesos terminados',
-                'leyenda': empPterminados,
-                'datos': pterminados,
-                'columns': columnsTable,
-                'data': dataTerminados
-            },
-            'eliminados': {
-                'title': 'Procesos eliminados',
-                'leyenda': empPeliminados,
-                'datos': peliminados,
-                'columns': columnsTable,
-                'data': dataEliminados
-            }
-        }
-        return pieChartData
+        return response
     
-    def get_cantidad_procesos_estado(self, informe_repository: InformeRepository, idservicio):
-        pieChartData = {}
-
-        empPactivos = []
-        pactivos = []
-        empPterminados = []
-        pterminados = []
-        empPeliminados = []
-        peliminados = []
-
+    def get_cliente_vendedor(self, informe_repository: InformeRepository, datos):
+        response = {}
+        pieLeyendaData = []
+        pieChartData = []
+        dataTable = []
         columnsTable = [
             {
-                'label': '#',
-                'prop': 'idproceso'
+                'label': 'Factura',
+                'prop': 'idfactura'
             },
             {
-                'label': 'Expediente',
-                'prop': 'expediente'
+                'label': 'Cliente',
+                'prop': 'cliente'
             },
             {
-                'label': 'Estado',
-                'prop': 'estado'
+                'label': 'Producto',
+                'prop': 'producto'
             },
             {
-                'label': 'Fase',
-                'prop': 'fase'
+                'label': 'Cantidad',
+                'prop': 'cantidad'
+            },
+            {
+                'label': 'Precio Venta',
+                'prop': 'precio'
+            },
+            {
+                'label': 'Fecha',
+                'prop': 'fecha'
             }
         ]
 
-        dataActivos = []
-        dataTerminados = []
-        dataEliminados = []
+        # CONSULTA DE INFORMACION
 
-        # PROCESOS ACTIVOS
-
-        data = informe_repository.get_cantidad_procesos_estado_bd(1, idservicio)
+        data = informe_repository.get_cantidad_cliente_vendedor(datos)
         for result in data:
-            empPactivos.append(result[1])
-            pactivos.append(
+            pieLeyendaData.append(result[1].capitalize())
+            pieChartData.append(
                 {
-                    'value': result[0],
-                    'name': result[1]
+                    'value': int(result[0]),
+                    'name': result[1].capitalize()
                 }
             )
 
-        data = informe_repository.get_procesos_estado_bd(1, idservicio)
+        data = informe_repository.get_cliente_vendedor_bd(datos)
         for result in data:
-            dataActivos.append(
+            dataTable.append(
                 {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'estado': result[2].capitalize(),
-                    'fase': 'Activo'
+                    'idfactura': result[0],
+                    'vendedor': result[1],
+                    'cliente': result[2],
+                    'cantidad': int(result[3]),
+                    'total': float(result[4]),
+                    'fecha': result[5]
                 }
             )
-
-        # PROCESOS TERMINADOS
-
-        data = informe_repository.get_cantidad_procesos_estado_bd(2, idservicio)
-        for result in data:
-            empPterminados.append(result[1])
-            pterminados.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_estado_bd(2, idservicio)
-        for result in data:
-            dataTerminados.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'estado': result[2].capitalize(),
-                    'fase': 'Terminado'
-                }
-            )
-
-        # PROCESOS ELIMINADOS
-
-        data = informe_repository.get_cantidad_procesos_estado_bd(3, idservicio)
-        for result in data:
-            empPeliminados.append(result[1])
-            peliminados.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_estado_bd(3, idservicio)
-        for result in data:
-            dataEliminados.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'estado': result[2].capitalize(),
-                    'fase': 'Eliminado'
-                }
-            )
-
-        # SE ESTRUCTURA EL OBJETO JSON DE RESPUESTA
         
-        pieChartData = {
-            'activos': {
-                'title': 'Procesos activos',
-                'leyenda': empPactivos,
-                'datos': pactivos,
-                'columns': columnsTable,
-                'data': dataActivos
-            },
-            'terminados': {
-                'title': 'Procesos terminados',
-                'leyenda': empPterminados,
-                'datos': pterminados,
-                'columns': columnsTable,
-                'data': dataTerminados
-            },
-            'eliminados': {
-                'title': 'Procesos eliminados',
-                'leyenda': empPeliminados,
-                'datos': peliminados,
-                'columns': columnsTable,
-                'data': dataEliminados
-            }
-        }
-        return pieChartData
-    
-    def get_cantidad_procesos_usuario(self, informe_repository: InformeRepository, idservicio):
-        pieChartData = {}
-
-        empPactivos = []
-        pactivos = []
-        empPterminados = []
-        pterminados = []
-        empPeliminados = []
-        peliminados = []
-
-        columnsTable = [
-            {
-                'label': '#',
-                'prop': 'idproceso'
-            },
-            {
-                'label': 'Expediente',
-                'prop': 'expediente'
-            },
-            {
-                'label': 'Usuario',
-                'prop': 'usuario'
-            },
-            {
-                'label': 'Fase',
-                'prop': 'fase'
-            }
-        ]
-
-        dataActivos = []
-        dataTerminados = []
-        dataEliminados = []
-
-        # PROCESOS ACTIVOS
-
-        data = informe_repository.get_cantidad_procesos_usuario_bd(1, idservicio)
-        for result in data:
-            empPactivos.append(result[1])
-            pactivos.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_usuario_bd(1, idservicio)
-        for result in data:
-            dataActivos.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'usuario': result[2].capitalize(),
-                    'fase': 'Activo'
-                }
-            )
-
-        # PROCESOS TERMINADOS
-
-        data = informe_repository.get_cantidad_procesos_usuario_bd(2, idservicio)
-        for result in data:
-            empPterminados.append(result[1])
-            pterminados.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_usuario_bd(2, idservicio)
-        for result in data:
-            dataTerminados.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'usuario': result[2].capitalize(),
-                    'fase': 'Terminado'
-                }
-            )
-
-        # PROCESOS ELIMINADOS
-
-        data = informe_repository.get_cantidad_procesos_usuario_bd(3, idservicio)
-        for result in data:
-            empPeliminados.append(result[1])
-            peliminados.append(
-                {
-                    'value': result[0],
-                    'name': result[1]
-                }
-            )
-
-        data = informe_repository.get_procesos_usuario_bd(3, idservicio)
-        for result in data:
-            dataEliminados.append(
-                {
-                    'idproceso': result[0],
-                    'expediente': result[1],
-                    'usuario': result[2].capitalize(),
-                    'fase': 'Eliminado'
-                }
-            )
-
         # SE ESTRUCTURA EL OBJETO JSON DE RESPUESTA
-        
-        pieChartData = {
-            'activos': {
-                'title': 'Procesos activos',
-                'leyenda': empPactivos,
-                'datos': pactivos,
-                'columns': columnsTable,
-                'data': dataActivos
-            },
-            'terminados': {
-                'title': 'Procesos terminados',
-                'leyenda': empPterminados,
-                'datos': pterminados,
-                'columns': columnsTable,
-                'data': dataTerminados
-            },
-            'eliminados': {
-                'title': 'Procesos eliminados',
-                'leyenda': empPeliminados,
-                'datos': peliminados,
-                'columns': columnsTable,
-                'data': dataEliminados
-            }
+
+        response = {
+            'title': 'Cliente',
+            'leyenda': pieLeyendaData,
+            'datos': pieChartData,
+            'columns': columnsTable,
+            'data': dataTable
         }
-        return pieChartData
+        return response
