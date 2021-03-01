@@ -28,15 +28,15 @@ class InformeService:
         columnsTable = [
             {
                 'label': 'Factura',
-                'prop': 'idfactura'
-            },
-            {
-                'label': 'Cliente',
-                'prop': 'cliente'
+                'prop': 'id'
             },
             {
                 'label': 'Producto',
                 'prop': 'producto'
+            },
+            {
+                'label': 'Cliente',
+                'prop': 'cliente'
             },
             {
                 'label': 'Cantidad',
@@ -47,8 +47,8 @@ class InformeService:
                 'prop': 'precio'
             },
             {
-                'label': 'Fecha',
-                'prop': 'fecha'
+                'label': 'Total',
+                'prop': 'total'
             }
         ]
 
@@ -68,7 +68,7 @@ class InformeService:
         for result in data:
             dataTable.append(
                 {
-                    'idfactura': result[0],
+                    'id': result[0],
                     'producto': result[1],
                     'cliente': result[2],
                     'cantidad': float(result[3]),
@@ -97,14 +97,14 @@ class InformeService:
         columnsTable = [
             {
                 'label': 'Factura',
-                'prop': 'idfactura'
+                'prop': 'id'
             },
             {
                 'label': 'Cliente',
                 'prop': 'cliente'
             },
             {
-                'label': 'Producto',
+                'label': 'Productos',
                 'prop': 'producto'
             },
             {
@@ -114,6 +114,10 @@ class InformeService:
             {
                 'label': 'Precio Venta',
                 'prop': 'precio'
+            },
+            {
+                'label': 'Total',
+                'prop': 'total'
             },
             {
                 'label': 'Fecha',
@@ -137,13 +141,14 @@ class InformeService:
         for result in data:
             dataTable.append(
                 {
-                    'idfactura': result[0],
+                    'id': result[0],
                     'cliente': result[1],
                     'producto': result[2],
                     'cantidad': float(result[3]),
                     'precio': float(result[4]),
-                    'total': float(result[4]),
-                    'fecha': result[5]
+                    'total': float(result[5]),
+                    'fecha': result[6],
+                    'table': 'cliente'
                 }
             )
         
@@ -166,23 +171,23 @@ class InformeService:
         columnsTable = [
             {
                 'label': 'Factura',
-                'prop': 'idfactura'
+                'prop': 'id'
+            },
+            {
+                'label': 'Vendedor',
+                'prop': 'vendedor'
             },
             {
                 'label': 'Cliente',
                 'prop': 'cliente'
             },
             {
-                'label': 'Producto',
-                'prop': 'producto'
-            },
-            {
                 'label': 'Cantidad',
                 'prop': 'cantidad'
             },
             {
-                'label': 'Precio Venta',
-                'prop': 'precio'
+                'label': 'Total',
+                'prop': 'total'
             },
             {
                 'label': 'Fecha',
@@ -206,7 +211,7 @@ class InformeService:
         for result in data:
             dataTable.append(
                 {
-                    'idfactura': result[0],
+                    'id': result[0],
                     'vendedor': result[1],
                     'cliente': result[2],
                     'cantidad': int(result[3]),

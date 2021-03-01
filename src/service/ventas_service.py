@@ -92,15 +92,32 @@ class VentasService:
         return usuarios 
 
     def get_ventas_ano(self, ventas_repository: VentasRepository, datos):
-        ventas = []
+        ventas = {}
+        xAxis = []
+        series = []
         data = ventas_repository.get_ventas_ano_bd(datos)
         for result in data:
-            ventas.append(
-                {
-                    'ano': result[0],
-                    'venta': result[1],
-                }
-            )
+            xAxis.append(result[0])
+            series.append(result[1])
+
+        mayor=series[0]
+        pos=0
+        for x in range(0, len(series)):
+            if series[x] > mayor:
+                mayor=series[x]
+                pos=x
+        
+        series[pos] = {
+            'value': mayor,
+            'itemStyle': {
+                'color': '#632e76'
+            }
+        }
+        print('--------- series -------------------------')
+        print(series)
+        print('----------------------------------')
+
+        ventas = {'xAxis': xAxis, 'data': series}
         return ventas
     
     def get_ventas_ano_mes(self, ventas_repository: VentasRepository, datos):

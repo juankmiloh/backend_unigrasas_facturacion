@@ -76,7 +76,8 @@ class VentasRepository:
             AND (FI.IDITEM IN :ITEM_ARG OR 0 IN :ITEM_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%Y') IN :ANO_ARG OR 0 IN :ANO_ARG)
             AND (DATE_FORMAT(F.F_PAGO, '%m') IN :MES_ARG OR 0 IN :MES_ARG)
-            GROUP BY DATE_FORMAT(F.F_PAGO, '%Y');
+            GROUP BY DATE_FORMAT(F.F_PAGO, '%Y')
+            ORDER BY DATE_FORMAT(F.F_PAGO, '%Y') ASC;
         '''
         return self.db.engine.execute(text(sql), CLIENTE_ARG=datos['cliente'], ANO_ARG=datos['ano'], MES_ARG=datos['mes'], USUARIO_ARG=datos['usuario'], ITEM_ARG=datos['producto']).fetchall()
     
