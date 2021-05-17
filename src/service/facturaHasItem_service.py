@@ -26,7 +26,7 @@ class FacturaHasItemService:
                     'idfactura': result[0],
                     'iditem': result[1],
                     'cantidad': result[2],
-                    'precio': result[3],
+                    'precio': float(result[3]),
                     'coditem': result[4],
                     'item': result[5],
                     'descripcion': result[6],

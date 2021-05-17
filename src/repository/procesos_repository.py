@@ -68,7 +68,7 @@ class ProcesosRepository:
         print('-------------------------------------')
         sql = '''
             INSERT INTO FACTURA(IDCLIENTE, IDUSUARIO, IDESTADO, DIVISA, F_EMISION, TOTAL, F_REGISTRO)
-            VALUES (:IDCLIENTE_ARG, :IDUSUARIO_ARG, :ESTADO_ARG, :DIVISA_ARG, STR_TO_DATE(:F_EMISION_ARG,'%Y/%m/%d %H:%i:%s'), :TOTAL_ARG, CURRENT_TIMESTAMP);
+            VALUES (:IDCLIENTE_ARG, :IDUSUARIO_ARG, :ESTADO_ARG, :DIVISA_ARG, :F_EMISION_ARG, :TOTAL_ARG, CURRENT_TIMESTAMP);
         '''
         resultsql = self.db.engine.execute(text(sql), IDCLIENTE_ARG=proceso["cliente"], IDUSUARIO_ARG=proceso["usuario"], ESTADO_ARG=1, DIVISA_ARG=proceso["divisa"], TOTAL_ARG=0, F_EMISION_ARG=proceso["f_emision"])
 
@@ -113,9 +113,9 @@ class ProcesosRepository:
                 IDMEDIO_PAGO = :IDMEDIO_PAGO_ARG,
                 IDUSUARIO = :IDUSUARIO_ARG,
                 DIVISA = :DIVISA_ARG,
-                F_EMISION = STR_TO_DATE(:FEMISION_ARG,'%Y/%m/%d %H:%i:%s'),
-                F_VENCIMIENTO = STR_TO_DATE(:FVENCIMIENTO_ARG,'%Y/%m/%d %H:%i:%s'),
-                F_PAGO = STR_TO_DATE(:FPAGO_ARG,'%Y/%m/%d %H:%i:%s'),
+                F_EMISION = :FEMISION_ARG,
+                F_VENCIMIENTO = :FVENCIMIENTO_ARG,
+                F_PAGO = :FPAGO_ARG,
                 TOTAL = :TOTAL_ARG,
                 DESCRIPCION = :DESCRIPCION_ARG,
                 IDESTADO = 2

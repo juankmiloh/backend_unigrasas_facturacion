@@ -27,6 +27,10 @@
 ---------------------------------------------------------------------------
 -- COMANDOS PARA CREAR UN SERVICIO EN LINUX - Levantar servidor de nodejs (VUEJS)
 ---------------------------------------------------------------------------
+
+NOTA. Instalar NodeJS a traves de sudo apt -y install nodejs (Descargar antes la version de node)
+https://computingforgeeks.com/install-node-js-14-on-ubuntu-debian-linux/
+
 1. Entrar al directorio:
 	cd /lib/systemd/system/
 

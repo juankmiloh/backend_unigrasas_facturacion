@@ -21,7 +21,7 @@ class VentasService:
         nombres = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
         meses = []
         children = []
-        data = ventas_repository.get_ventas_lista_meses_bd(datos)
+        data = ventas_repository.get_ventas_lista_meses_bd(tuple(datos))
         for result in data:
             children.append(
                 {
@@ -98,7 +98,7 @@ class VentasService:
         data = ventas_repository.get_ventas_ano_bd(datos)
         for result in data:
             xAxis.append(result[0])
-            series.append(result[1])
+            series.append(float(result[1]))
 
         mayor=series[0]
         pos=0
@@ -108,7 +108,7 @@ class VentasService:
                 pos=x
         
         series[pos] = {
-            'value': mayor,
+            'value': float(mayor),
             'itemStyle': {
                 'color': '#632e76'
             }
@@ -128,7 +128,7 @@ class VentasService:
                 {
                     'ano': result[0],
                     'mes': result[1],
-                    'venta': result[2],
+                    'venta': float(result[2]),
                 }
             )
         return ventas

@@ -1,6 +1,4 @@
-import pandas as pd
-import numpy as np
-import datetime
+
 from flask import abort
 from sqlalchemy.sql.elements import Null
 from ..repository import ProcesosRepository
@@ -25,7 +23,7 @@ class ProcesosService:
                     'idfactura': result[0],
                     'cliente': result[1],
                     'f_emision': str(result[2]),
-                    'total': result[3],
+                    'total': float(result[3]),
                     'idusuario': result[4],
                     'usuario': result[5],
                     'f_vencimiento': f_vencimiento,
@@ -51,7 +49,7 @@ class ProcesosService:
                     'cliente': result[1],
                     'divisa': result[2],
                     'f_emision': str(result[3]),
-                    'total': result[4],
+                    'total': float(result[4]),
                     'idusuario': result[5],
                     'usuario': result[6]
                 }
@@ -74,7 +72,7 @@ class ProcesosService:
                     'f_emision': str(result[6]),
                     'f_vencimiento': str(result[7]),
                     'f_pago': str(result[8]),
-                    'total': result[9],
+                    'total': float(result[9]),
                     'descripcion': result[10],
                     'n_cliente': result[11],
                     'direccion': result[12],

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
-from src import create_app
 from flask_script import Manager
+from src import create_app
 
 app = create_app()
 manager = Manager(app)
